@@ -1,0 +1,27 @@
+Minuta de Reunión — Revisión de Arquitectura del Sistema de Recomendaciones
+Fecha: 14 de febrero de 2025
+Participantes: Lucía Fernández (Tech Lead), Matías Gómez (Backend), Ana Torres (Data Science), Rodrigo Paz (DevOps)
+
+Objetivo de la reunión:
+Definir la arquitectura técnica para el nuevo sistema de recomendaciones de contenido que debe estar en producción para el Q2 2025.
+
+Decisiones tomadas:
+
+1. Se acordó utilizar una arquitectura híbrida: filtrado colaborativo basado en embeddings combinado con reglas de negocio explícitas.
+
+2. Vector Database: se eligió Pinecone sobre Weaviate por su latencia más baja en pruebas internas (p95 < 80ms vs 140ms de Weaviate). Presupuesto aprobado: $1.200 USD/mes.
+
+3. La API de recomendaciones se construirá en FastAPI con Python 3.12. Rodrigo estimó un tiempo de deploy inicial de 2 semanas.
+
+4. Para el pipeline de embeddings se usará el modelo text-embedding-3-large de OpenAI. Costo estimado de embeddings: $0.13 por millón de tokens.
+
+5. Se usará Redis como caché de resultados con TTL de 10 minutos para reducir llamadas repetidas a Pinecone. Rodrigo se encarga de provisionar el cluster en AWS ElastiCache.
+
+6. Volumen esperado: 50.000 usuarios activos diarios, pico estimado de 800 requests/segundo.
+
+Próximos pasos:
+- Ana Torres: preparar dataset de entrenamiento con interacciones de los últimos 6 meses (fecha límite: 21/02).
+- Matías Gómez: desarrollar endpoints base de FastAPI y contrato de API (fecha límite: 28/02).
+- Rodrigo Paz: provisionar infraestructura en AWS (Pinecone index + ElastiCache) (fecha límite: 24/02).
+- Lucía Fernández: revisar y aprobar contrato de API antes del 01/03.
+- Próxima revisión de avance: 28 de febrero de 2025.

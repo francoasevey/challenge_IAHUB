@@ -1,0 +1,29 @@
+BORRADOR - NO DISTRIBUIR - v0.3 - TRABAJO EN PROGRESO
+
+Re: Fwd: Re: Fwd: proyecto nuevo??? (actualizar cuando puedan)
+
+--- Mensaje original de hace 3 semanas ---
+Ok chicos entonces quedamos en lo que dijimos pero igual revisen porque creo que cambiamos algunas cosas después.
+
+--- Notas de la reunión del martes (o fue el miércoles?) ---
+
+Estuvimos hablando del proyecto de migración de la base de datos. Había gente de varios equipos. Participó Juan (o era Julián?), alguien de infraestructura cuyos nombre no recuerdo, y creo que también vino alguien de legal al final pero no sé si escuchó todo.
+
+Sobre la migración: la idea era migrar de PostgreSQL a algo más escalable. Alguien propuso MongoDB pero otros dijeron que no por el tema de las transacciones. También se mencionó CockroachDB y Aurora. Al final no quedó claro qué se va a usar porque dijeron que iban a hacer una PoC pero nadie quedó asignado formalmente.
+
+El volumen actual es de unos 2TB de datos (aunque alguien dijo que podría ser más, hasta 5TB si contamos los archivos adjuntos que están en S3). La performance actual tiene problemas: queries que tardan entre 3 y 45 segundos dependiendo de la carga, y a veces se cae el domingo a la madrugada (horario de menor tráfico, pero igual molesta).
+
+Costos: actualmente pagamos $800/mes por el servidor de PostgreSQL. La propuesta de Aurora costaría entre $1.200 y $2.500/mes según el tamaño que elijamos. MongoDB Atlas andaría por los $900/mes en el tier M30. Nadie hizo los números de CockroachDB todavía.
+
+IMPORTANTE: hay que hablar con el equipo legal porque parece que hay datos sensibles que no pueden salir de Argentina por regulaciones. Esto puede afectar la elección de proveedor. No sé si alguien lo está viendo.
+
+Próximos pasos: (esto no está confirmado, es lo que yo entendí)
+- Hacer la PoC (no sé quién)
+- Hablar con legal (tampoco sé quién)
+- Revisar si hay SLA que se estén incumpliendo
+- Algo con el equipo de BI que necesitan acceso de lectura y se quejaron de algo
+
+Timeline: se habló de Q2 pero también de "antes de mitad de año" que técnicamente es lo mismo. Igual nadie firmó nada.
+
+PD: acordarse de preguntarle a Marcela sobre el tema del backup que quedó pendiente desde noviembre.
+PD2: esto es un borrador, no lo manden a gerencia todavía.

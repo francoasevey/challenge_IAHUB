@@ -1,0 +1,11 @@
+Hola equipo,
+
+Les paso lo que hablamos ayer con los de producto. Básicamente dijeron que hay que mejorar lo del login porque los usuarios se quejan mucho. También mencionaron algo de las notificaciones pero no quedó muy claro si eso va para este sprint o el próximo.
+
+Pedro dijo que él puede encargarse de la parte de front pero necesita que alguien le defina bien los criterios primero. No sé si eso lo hace diseño o producto.
+
+Para el tema del login, creo que la idea era agregar el login con Google, aunque también se habló de Apple. El tema es que no sé si tenemos los permisos de App Store configurados.
+
+El deadline lo mencionaron pero no lo anoté, creo que era para fin de mes o principios del siguiente. Habría que confirmar con Carla.
+
+Saludos
