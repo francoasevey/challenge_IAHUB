@@ -123,11 +123,37 @@ python main.py --file inputs/ideal.txt
 
 ---
 
-## Docker
+## Probarlo rápido (para revisores)
+
+Si solo querés verificar que funciona, necesitás:
+
+1. **Docker Desktop** instalado ([docker.com/get-started](https://www.docker.com/get-started/))
+2. **API key de Anthropic** — registrate gratis en [console.anthropic.com](https://console.anthropic.com) y cargá al menos $5 USD de crédito
+
+Luego:
 
 ```bash
-# Construir la imagen
+# 1. Clonar y entrar al directorio
+git clone <repo-url>
+cd challenge_IAHUB
+
+# 2. Crear el archivo de configuración
+cp .env.example .env
+# Abrir .env y reemplazar "tu_api_key_aqui" con tu ANTHROPIC_API_KEY
+
+# 3. Buildear la imagen (una sola vez)
 docker build -t extractor-docs .
+
+# 4. Probar con texto directo
+docker run --env-file .env extractor-docs \
+  python main.py --text 'Reunión del lunes: Ana Torres se encarga del backup antes del viernes. Presupuesto aprobado: $3000 USD para infraestructura AWS.'
+```
+
+Deberías ver el JSON estructurado en pantalla en menos de 10 segundos.
+
+---
+
+## Docker
 
 # Procesar un archivo
 docker run --env-file .env -v $(pwd)/inputs:/app/inputs extractor-docs \
