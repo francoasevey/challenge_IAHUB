@@ -64,9 +64,8 @@ Lo que revisé y modifiqué manualmente:
 ### 6. Qué haría diferente
 
 - **Exportar JSON Schema como artefacto:** Pydantic v2 ya valida con JSON Schema internamente. Como mejora, exportaría el schema como archivo `.json` con `ExtractionResult.model_json_schema()` para que otros sistemas o equipos (Java, Go, frontend) puedan validar el output sin depender de Python.
-- **Logging estructurado:** en producción agregaría logs con el tiempo de cada llamada al LLM, warnings generados y tokens usados, para monitorear calidad a lo largo del tiempo.
 - **Evaluación automatizada:** diseñar un conjunto de inputs con outputs esperados para medir precisión del extractor ante cambios de modelo o prompt.
-- **Batching:** para escalar, aprovechar la Batches API de Anthropic (50% más barato, hasta 24h de latencia) para procesar miles de documentos offline.
+- **Batches API de Anthropic:** para escalar a miles de documentos offline, aprovechar la Batches API (50% más barato, hasta 24h de latencia). Distinto al `--folder` implementado que procesa en serie; la Batches API paraleliza en la infraestructura de Anthropic.
 - **Cambio de modelo para producción a escala:** para un sistema empresarial con alto volumen, migraría a **Gemini 2.5 Flash** que soporta PDFs nativamente y cuesta ~20x menos que Claude Sonnet manteniendo calidad comparable. La arquitectura en capas del proyecto facilita este cambio: solo se modifica `llm_client.py`.
 
 ### 7. Decisión de modelo: prototipo vs. producción

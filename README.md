@@ -169,7 +169,7 @@ pytest tests/ -v
 
 | Decisión | Elección | Justificación |
 |----------|----------|---------------|
-| **LLM** | Claude claude-sonnet-4-6 | Mejor relación capacidad/costo para extracción estructurada; tool calling nativo garantiza formato |
+| **LLM** | claude-sonnet-4-6 | Mejor relación capacidad/costo para extracción estructurada; tool calling nativo garantiza formato |
 | **Tool calling** | `tool_choice: any` | Fuerza estructura en lugar de depender de prompt engineering; más robusto que parsear texto libre |
 | **Temperatura** | 0.1 | Maximiza consistencia en extracción estructurada, sin eliminar capacidad inferencial |
 | **Validación** | Pydantic v2 | Tipos garantizados + serialización JSON sin código extra |
