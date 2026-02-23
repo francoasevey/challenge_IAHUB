@@ -3,7 +3,7 @@
     "input_original": "Minuta de Reunión — Revisión de Arquitectura del Sistema de Recomendaciones\nFecha: 14 de febrero de 2025\nParticipantes: Lucía Fernández (Tech Lead), Matías Gómez (Backend), Ana Torres (Data Science), Rodrigo Paz (DevOps)\n\nObjetivo de la reunión:\nDefinir la arquitectura técnica para el nuevo sistema de recomendaciones de contenido que debe estar en producción para el Q2 2025.\n\nDecisiones tomadas:\n\n1. Se acordó utilizar una arquitectura híbrida: filtrado colaborativo basado en embeddings combinado con reglas de negocio explícitas.\n\n2. Vector Database: se eligió Pinecone sobre Weaviate por su latencia más baja en pruebas internas (p95 < 80ms vs 140ms de Weaviate). Presupuesto aprobado: $1.200 USD/mes.\n\n3. La API de recomendaciones se construirá en FastAPI con Python 3.12. Rodrigo estimó un tiempo de deploy inicial de 2 semanas.\n\n4. Para el pipeline de embeddings se usará el modelo text-embedding-3-large de OpenAI. Costo estimado de embeddings: $0.13 por millón de tokens.\n\n5. Se usará Redis como caché de resultados con TTL de 10 minutos para reducir llamadas repetidas a Pinecone. Rodrigo se encarga de provisionar el cluster en AWS ElastiCache.\n\n6. Volumen esperado: 50.000 usuarios activos diarios, pico estimado de 800 requests/segundo.\n\nPróximos pasos:\n- Ana Torres: preparar dataset de entrenamiento con interacciones de los últimos 6 meses (fecha límite: 21/02).\n- Matías Gómez: desarrollar endpoints base de FastAPI y contrato de API (fecha límite: 28/02).\n- Rodrigo Paz: provisionar infraestructura en AWS (Pinecone index + ElastiCache) (fecha límite: 24/02).\n- Lucía Fernández: revisar y aprobar contrato de API antes del 01/03.\n- Próxima revisión de avance: 28 de febrero de 2025.\n",
     "output_estructurado": {
       "titulo": "Minuta de Reunión — Revisión de Arquitectura del Sistema de Recomendaciones (14/02/2025)",
-      "resumen": "Reunión técnica para definir la arquitectura del nuevo sistema de recomendaciones de contenido, con fecha objetivo de producción en Q2 2025. Se tomaron decisiones clave sobre tecnologías: arquitectura híbrida con embeddings, Pinecone como base de datos vectorial, FastAPI con Python 3.12 para la API, modelo text-embedding-3-large de OpenAI para embeddings, y Redis sobre AWS ElastiCache como caché. Se asignaron tareas concretas a cada integrante del equipo con fechas límite entre el 21 y 28 de febrero de 2025.",
+      "resumen": "Reunión técnica para definir la arquitectura del nuevo sistema de recomendaciones de contenido, con fecha objetivo de producción en Q2 2025. Se acordó una arquitectura híbrida basada en embeddings y reglas de negocio, utilizando Pinecone como base de datos vectorial, FastAPI con Python 3.12 para la API, y Redis como capa de caché. Se asignaron tareas concretas a cada integrante del equipo con fechas límite entre el 21 y el 28 de febrero de 2025.",
       "entidades_clave": [
         "Lucía Fernández",
         "Matías Gómez",
@@ -14,9 +14,9 @@
         "FastAPI",
         "Python 3.12",
         "OpenAI",
-        "text-embedding-3-large",
         "Redis",
-        "AWS ElastiCache"
+        "AWS ElastiCache",
+        "text-embedding-3-large"
       ],
       "conceptos_principales": [
         "Arquitectura híbrida de recomendaciones",
@@ -26,19 +26,22 @@
         "Pipeline de embeddings",
         "Caché de resultados con TTL",
         "API REST de recomendaciones",
-        "Infraestructura en la nube (AWS)"
+        "Infraestructura cloud en AWS"
       ],
       "datos_relevantes": {
         "Fecha de reunión": "14 de febrero de 2025",
         "Fecha objetivo de producción": "Q2 2025",
-        "Latencia Pinecone (p95)": "< 80ms",
-        "Latencia Weaviate (p95)": "140ms",
+        "Base de datos vectorial elegida": "Pinecone",
+        "Latencia p95 Pinecone": "< 80ms",
+        "Latencia p95 Weaviate": "140ms",
         "Presupuesto Pinecone": "$1.200 USD/mes",
-        "Costo embeddings OpenAI": "$0.13 por millón de tokens",
-        "TTL caché Redis": "10 minutos",
-        "Usuarios activos diarios esperados": "50.000",
-        "Pico de requests estimado": "800 requests/segundo",
+        "Framework API": "FastAPI con Python 3.12",
         "Tiempo estimado de deploy inicial": "2 semanas",
+        "Modelo de embeddings": "text-embedding-3-large (OpenAI)",
+        "Costo de embeddings": "$0.13 por millón de tokens",
+        "Caché": "Redis con TTL de 10 minutos",
+        "Usuarios activos diarios esperados": "50.000",
+        "Pico estimado de requests": "800 requests/segundo",
         "Próxima revisión de avance": "28 de febrero de 2025"
       },
       "acciones_sugeridas": [
@@ -46,13 +49,13 @@
         "Desarrollar endpoints base de FastAPI y contrato de API (Matías Gómez) — fecha límite: 28/02/2025",
         "Provisionar infraestructura en AWS: Pinecone index + ElastiCache (Rodrigo Paz) — fecha límite: 24/02/2025",
         "Revisar y aprobar contrato de API (Lucía Fernández) — fecha límite: 01/03/2025",
-        "Realizar revisión de avance del proyecto — fecha: 28/02/2025"
+        "Realizar revisión de avance del proyecto (todo el equipo) — fecha: 28/02/2025"
       ]
     },
     "warnings": [],
     "metadata": {
       "modelo": "claude-sonnet-4-6",
-      "timestamp": "2026-02-22T01:28:54.506205+00:00",
+      "timestamp": "2026-02-22T02:10:10.792658+00:00",
       "opcion": "C"
     }
   },
@@ -60,7 +63,7 @@
     "input_original": "Hola equipo,\n\nLes paso lo que hablamos ayer con los de producto. Básicamente dijeron que hay que mejorar lo del login porque los usuarios se quejan mucho. También mencionaron algo de las notificaciones pero no quedó muy claro si eso va para este sprint o el próximo.\n\nPedro dijo que él puede encargarse de la parte de front pero necesita que alguien le defina bien los criterios primero. No sé si eso lo hace diseño o producto.\n\nPara el tema del login, creo que la idea era agregar el login con Google, aunque también se habló de Apple. El tema es que no sé si tenemos los permisos de App Store configurados.\n\nEl deadline lo mencionaron pero no lo anoté, creo que era para fin de mes o principios del siguiente. Habría que confirmar con Carla.\n\nSaludos\n",
     "output_estructurado": {
       "titulo": "Resumen de reunión con equipo de producto – Mejoras de login y notificaciones",
-      "resumen": "El correo resume una reunión con el equipo de producto en la que se identificaron dos áreas de mejora: el sistema de login (con posible incorporación de acceso via Google y Apple) y las notificaciones. Pedro se ofrece a liderar el desarrollo frontend del login, pero requiere que se definan los criterios previos. Hay incertidumbre sobre el deadline exacto y sobre la asignación de responsabilidades entre los equipos de diseño y producto.",
+      "resumen": "El email resume una reunión con el equipo de producto en la que se identificaron dos áreas de mejora: el flujo de login (con posible incorporación de autenticación via Google y Apple) y el sistema de notificaciones. Se asignó a Pedro la responsabilidad del desarrollo front-end, aunque está pendiente la definición de criterios por parte de diseño o producto. Hay incertidumbre sobre el deadline y el alcance del sprint actual.",
       "entidades_clave": [
         "Pedro",
         "Carla",
@@ -70,31 +73,31 @@
         "App Store"
       ],
       "conceptos_principales": [
-        "Mejora del sistema de login",
-        "Login con Google y/o Apple",
-        "Notificaciones (alcance indefinido)",
-        "Definición de criterios de aceptación",
-        "Asignación de responsabilidades entre diseño y producto",
+        "Mejora del flujo de login",
+        "Autenticación con Google y Apple",
+        "Sistema de notificaciones",
+        "Definición de criterios de desarrollo",
+        "Planificación de sprint",
         "Permisos de App Store"
       ],
       "datos_relevantes": {
         "Deadline estimado": "Fin de mes o principios del mes siguiente (sin confirmar)",
-        "Sprint asignado para notificaciones": "Indefinido (¿sprint actual o próximo?)",
-        "Responsable de frontend": "Pedro",
-        "Responsable de confirmar deadline": "Carla"
+        "Sprint en cuestión": "Sprint actual o próximo (sin definir para notificaciones)",
+        "Responsable de front-end": "Pedro",
+        "Fuente del deadline": "Carla (pendiente de confirmación)"
       },
       "acciones_sugeridas": [
-        "Confirmar el deadline exacto del proyecto (Carla)",
-        "Definir criterios de aceptación para el módulo de login (Diseño o Producto)",
-        "Implementar el frontend del login una vez definidos los criterios (Pedro)",
-        "Clarificar si las notificaciones entran en el sprint actual o el próximo (Producto)",
-        "Verificar si los permisos de App Store están configurados para login con Apple"
+        "Confirmar el deadline exacto con Carla",
+        "Definir criterios de aceptación para el login antes de que Pedro comience el desarrollo (Responsable: diseño o producto)",
+        "Clarificar si las mejoras de notificaciones entran en el sprint actual o el próximo (Responsable: equipo de producto)",
+        "Verificar si los permisos de App Store están configurados para login con Apple",
+        "Decidir si se implementa login con Google, Apple o ambos"
       ]
     },
     "warnings": [],
     "metadata": {
       "modelo": "claude-sonnet-4-6",
-      "timestamp": "2026-02-22T01:29:03.318891+00:00",
+      "timestamp": "2026-02-22T02:10:19.872808+00:00",
       "opcion": "C"
     }
   },
@@ -102,7 +105,7 @@
     "input_original": "BORRADOR - NO DISTRIBUIR - v0.3 - TRABAJO EN PROGRESO\n\nRe: Fwd: Re: Fwd: proyecto nuevo??? (actualizar cuando puedan)\n\n--- Mensaje original de hace 3 semanas ---\nOk chicos entonces quedamos en lo que dijimos pero igual revisen porque creo que cambiamos algunas cosas después.\n\n--- Notas de la reunión del martes (o fue el miércoles?) ---\n\nEstuvimos hablando del proyecto de migración de la base de datos. Había gente de varios equipos. Participó Juan (o era Julián?), alguien de infraestructura cuyos nombre no recuerdo, y creo que también vino alguien de legal al final pero no sé si escuchó todo.\n\nSobre la migración: la idea era migrar de PostgreSQL a algo más escalable. Alguien propuso MongoDB pero otros dijeron que no por el tema de las transacciones. También se mencionó CockroachDB y Aurora. Al final no quedó claro qué se va a usar porque dijeron que iban a hacer una PoC pero nadie quedó asignado formalmente.\n\nEl volumen actual es de unos 2TB de datos (aunque alguien dijo que podría ser más, hasta 5TB si contamos los archivos adjuntos que están en S3). La performance actual tiene problemas: queries que tardan entre 3 y 45 segundos dependiendo de la carga, y a veces se cae el domingo a la madrugada (horario de menor tráfico, pero igual molesta).\n\nCostos: actualmente pagamos $800/mes por el servidor de PostgreSQL. La propuesta de Aurora costaría entre $1.200 y $2.500/mes según el tamaño que elijamos. MongoDB Atlas andaría por los $900/mes en el tier M30. Nadie hizo los números de CockroachDB todavía.\n\nIMPORTANTE: hay que hablar con el equipo legal porque parece que hay datos sensibles que no pueden salir de Argentina por regulaciones. Esto puede afectar la elección de proveedor. No sé si alguien lo está viendo.\n\nPróximos pasos: (esto no está confirmado, es lo que yo entendí)\n- Hacer la PoC (no sé quién)\n- Hablar con legal (tampoco sé quién)\n- Revisar si hay SLA que se estén incumpliendo\n- Algo con el equipo de BI que necesitan acceso de lectura y se quejaron de algo\n\nTimeline: se habló de Q2 pero también de \"antes de mitad de año\" que técnicamente es lo mismo. Igual nadie firmó nada.\n\nPD: acordarse de preguntarle a Marcela sobre el tema del backup que quedó pendiente desde noviembre.\nPD2: esto es un borrador, no lo manden a gerencia todavía.\n",
     "output_estructurado": {
       "titulo": "Borrador de notas de reunión: Proyecto de migración de base de datos",
-      "resumen": "El documento es un borrador informal de notas de una reunión (fecha incierta, martes o miércoles) sobre la migración de la base de datos actual de PostgreSQL a una solución más escalable. Se evaluaron opciones como MongoDB, CockroachDB y Aurora, sin llegar a una decisión definitiva. Se identificaron problemas de performance, costos, restricciones legales sobre datos en Argentina y la necesidad de realizar una PoC, aunque ninguna tarea quedó formalmente asignada.",
+      "resumen": "Notas informales y parcialmente incompletas de una reunión (fecha incierta, martes o miércoles) sobre la migración de la base de datos actual de PostgreSQL a una solución más escalable. Se evaluaron opciones como MongoDB, CockroachDB y Aurora, sin llegar a una decisión definitiva. Se identificaron restricciones regulatorias sobre datos sensibles en Argentina, problemas de performance actuales y diferencias de costos entre alternativas. Los próximos pasos no tienen responsables asignados formalmente.",
       "entidades_clave": [
         "Juan / Julián",
         "Marcela",
@@ -119,40 +122,41 @@
         "Migración de base de datos",
         "Escalabilidad",
         "Evaluación de proveedores cloud",
-        "Restricciones de residencia de datos en Argentina",
+        "Restricciones regulatorias de datos en Argentina",
         "Performance de queries",
-        "Costos de infraestructura",
-        "Proof of Concept (PoC)",
-        "SLA y disponibilidad",
-        "Acceso de lectura para equipo de BI",
-        "Backup pendiente"
+        "Análisis de costos",
+        "Prueba de concepto (PoC)",
+        "Cumplimiento de SLA",
+        "Soberanía del dato",
+        "Acceso de lectura para BI"
       ],
       "datos_relevantes": {
         "Volumen de datos actual": "~2 TB (hasta 5 TB incluyendo archivos adjuntos en S3)",
-        "Latencia de queries": "Entre 3 y 45 segundos según carga",
+        "Latencia de queries actual": "Entre 3 y 45 segundos según carga",
         "Caídas del sistema": "Domingos a la madrugada (horario de menor tráfico)",
         "Costo actual (PostgreSQL)": "$800/mes",
         "Costo estimado Aurora": "Entre $1.200 y $2.500/mes",
         "Costo estimado MongoDB Atlas (M30)": "~$900/mes",
-        "Costo CockroachDB": "Sin calcular",
-        "Timeline objetivo": "Q2 / antes de mitad de año",
+        "Costo CockroachDB": "No calculado",
+        "Timeline estimado": "Q2 / antes de mitad de año",
         "Versión del documento": "v0.3",
-        "Backup pendiente desde": "Noviembre"
+        "Tema de backup pendiente desde": "Noviembre"
       },
       "acciones_sugeridas": [
-        "Realizar una PoC comparativa entre las opciones de base de datos evaluadas (responsable: sin asignar)",
-        "Consultar al equipo legal sobre restricciones de residencia de datos en Argentina y su impacto en la elección de proveedor (responsable: sin asignar)",
-        "Revisar si existen SLAs que se estén incumpliendo actualmente (responsable: sin asignar)",
-        "Coordinar con el equipo de BI para resolver su necesidad de acceso de lectura (responsable: sin asignar)",
-        "Calcular costos de CockroachDB para completar la comparativa económica (responsable: sin asignar)",
-        "Consultar a Marcela sobre el tema de backup pendiente desde noviembre (responsable: redactor del documento)",
-        "No distribuir este borrador a gerencia hasta que esté finalizado"
+        "Realizar PoC comparativa entre las opciones de base de datos evaluadas (responsable: no asignado)",
+        "Coordinar reunión con el equipo legal para evaluar restricciones regulatorias sobre datos sensibles en Argentina (responsable: no asignado)",
+        "Revisar si existen SLAs que se estén incumpliendo actualmente (responsable: no asignado)",
+        "Resolver el requerimiento del equipo de BI sobre acceso de lectura a la base de datos (responsable: no asignado)",
+        "Calcular costos de CockroachDB para completar el análisis comparativo (responsable: no asignado)",
+        "Consultar a Marcela sobre el tema de backup pendiente desde noviembre (responsable: quien redactó las notas)",
+        "Confirmar y formalizar responsables para cada próximo paso antes de distribuir el documento",
+        "No enviar este borrador a gerencia hasta su revisión y aprobación"
       ]
     },
     "warnings": [],
     "metadata": {
       "modelo": "claude-sonnet-4-6",
-      "timestamp": "2026-02-22T01:29:17.443132+00:00",
+      "timestamp": "2026-02-22T02:10:33.452890+00:00",
       "opcion": "C"
     }
   }

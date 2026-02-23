@@ -48,7 +48,7 @@ Lo que revisé y modifiqué manualmente:
 |----------|-------------------|---------------|
 | Tool calling sobre prompt engineering | No (criterio propio) | Más robusto: el formato está garantizado por el protocolo, no por el prompt |
 | Temperatura 0.1 | No | Extracción estructurada no se beneficia de creatividad; consistencia > diversidad |
-| Pydantic v2 para validación | Sí (sugerido) | Validación de tipos + serialización JSON en un solo paso, sin código extra |
+| Pydantic v2 para validación con JSON Schema | Sí (sugerido) | Pydantic v2 está construido sobre JSON Schema — valida tipos, estructura y campos obligatorios. Cumple el bonus "Validación con JSON Schema" sin necesidad de un archivo `.json` separado. El schema puede exportarse en cualquier momento con `ExtractionResult.model_json_schema()` |
 | Backoff exponencial en reintentos | Sí (implementación) | Patrón estándar para rate limits; definí los parámetros (3 intentos, 2^n segundos) |
 | Separación validator / llm_client | No (criterio propio) | Permite testear la validación sin llamadas reales al LLM |
 | Warnings no bloquean extracción | No (criterio propio) | Un texto ambiguo sigue produciendo valor parcial; el warning informa al caller |
@@ -63,7 +63,21 @@ Lo que revisé y modifiqué manualmente:
 
 ### 6. Qué haría diferente
 
-- **Validación con JSON Schema explícito:** además de Pydantic, usar `jsonschema` para una capa de validación declarativa que se pueda compartir con otros equipos sin depender de Python.
+- **Exportar JSON Schema como artefacto:** Pydantic v2 ya valida con JSON Schema internamente. Como mejora, exportaría el schema como archivo `.json` con `ExtractionResult.model_json_schema()` para que otros sistemas o equipos (Java, Go, frontend) puedan validar el output sin depender de Python.
 - **Logging estructurado:** en producción agregaría logs con el tiempo de cada llamada al LLM, warnings generados y tokens usados, para monitorear calidad a lo largo del tiempo.
 - **Evaluación automatizada:** diseñar un conjunto de inputs con outputs esperados para medir precisión del extractor ante cambios de modelo o prompt.
 - **Batching:** para escalar, aprovechar la Batches API de Anthropic (50% más barato, hasta 24h de latencia) para procesar miles de documentos offline.
+- **Cambio de modelo para producción a escala:** para un sistema empresarial con alto volumen, migraría a **Gemini 2.5 Flash** que soporta PDFs nativamente y cuesta ~20x menos que Claude Sonnet manteniendo calidad comparable. La arquitectura en capas del proyecto facilita este cambio: solo se modifica `llm_client.py`.
+
+### 7. Decisión de modelo: prototipo vs. producción
+
+Una reflexión importante sobre la elección del modelo:
+
+| Contexto | Modelo recomendado | Justificación |
+|----------|--------------------|---------------|
+| **Este challenge / prototipo** | Claude Sonnet | Máxima robustez, tool calling nativo, excelente en español; el costo es irrelevante a escala de prueba |
+| **Producción < 5.000 docs/mes** | Claude Sonnet o GPT-4o | Calidad crítica, volumen manejable |
+| **Producción > 5.000 docs/mes** | Gemini 2.5 Flash | $10/mes vs $200/mes; soporta PDF nativo; contexto de 1M tokens |
+| **Volumen masivo + bajo costo** | GROQ + pdfplumber | Casi gratuito; requiere librería adicional para PDFs; menor consistencia |
+
+La arquitectura del proyecto fue diseñada para que este cambio sea transparente al resto del sistema: `extractor.py`, `validator.py` y `schemas.py` no saben qué modelo se usa.

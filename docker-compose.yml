@@ -1,0 +1,8 @@
+services:
+  extractor:
+    build: .
+    env_file:
+      - .env
+    volumes:
+      - ./inputs:/app/inputs
+      - ./outputs:/app/outputs

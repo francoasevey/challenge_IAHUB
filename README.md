@@ -123,6 +123,40 @@ python main.py --file inputs/ideal.txt
 
 ---
 
+## Docker
+
+```bash
+# Construir la imagen
+docker build -t extractor-docs .
+
+# Procesar un archivo
+docker run --env-file .env -v $(pwd)/inputs:/app/inputs extractor-docs \
+  python main.py --file inputs/ideal.txt
+
+# Texto directo
+docker run --env-file .env extractor-docs \
+  python main.py --text "Reunión del lunes: se decidió migrar a FastAPI."
+
+# Generar todos los outputs
+docker run --env-file .env -v $(pwd)/inputs:/app/inputs -v $(pwd)/outputs:/app/outputs extractor-docs \
+  python generate_outputs.py
+```
+
+O con docker-compose:
+
+```bash
+docker-compose run extractor python main.py --file inputs/ideal.txt
+```
+
+---
+
+## Limitaciones conocidas
+
+### Soporte PDF
+El soporte de PDF usa la capacidad nativa de Claude (envío como base64). Funciona correctamente para documentos de uso habitual (minutas, reportes, contratos de pocas páginas). Para PDFs muy grandes (más de ~50 páginas o más de 20MB) puede exceder los límites de contexto del modelo o el tamaño máximo de request de la API. En ese caso, se recomienda dividir el documento o usar una librería de extracción de texto (`pdfplumber`) como preprocesamiento.
+
+---
+
 ## Tests
 
 ```bash
