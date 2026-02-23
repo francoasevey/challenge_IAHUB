@@ -9,7 +9,7 @@
 
 ## Justificación
 
-Claude claude-sonnet-4-6 ofrece la mejor relación entre capacidad de comprensión semántica y costo para tareas de extracción estructurada. Su soporte nativo de **tool calling** permite definir un schema explícito que el modelo debe respetar, eliminando la necesidad de parsear texto libre y reduciendo drásticamente los errores de formato. Para el tipo de documentos del challenge (minutas, notas, textos semiestructurados en español), Claude demuestra comprensión contextual superior a modelos más pequeños.
+claude-sonnet-4-6 ofrece la mejor relación entre capacidad de comprensión semántica y costo para tareas de extracción estructurada. Su soporte nativo de **tool calling** permite definir un schema explícito que el modelo debe respetar, eliminando la necesidad de parsear texto libre y reduciendo drásticamente los errores de formato. Para el tipo de documentos del challenge (minutas, notas, textos semiestructurados en español), Claude demuestra comprensión contextual superior a modelos más pequeños.
 
 ## Alternativas consideradas
 
