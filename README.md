@@ -151,6 +151,11 @@ docker run --env-file .env extractor-docs \
 
 Deberías ver el JSON estructurado en pantalla en menos de 10 segundos.
 
+> **Sin API key:** Si no querés crear una cuenta, podés revisar directamente el archivo `outputs.json` en el repo — contiene los outputs reales generados por el sistema para los 3 casos de prueba (ideal, ambiguo y ruidoso). También podés correr los tests sin API key, ya que mockean el LLM:
+> ```bash
+> docker run extractor-docs python -m pytest tests/ -v
+> ```
+
 ---
 
 ## Docker
