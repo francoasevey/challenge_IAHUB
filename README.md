@@ -41,7 +41,7 @@ Separación de responsabilidades en tres capas:
 
 ```bash
 # Clonar y entrar al directorio
-git clone <repo-url>
+git clone https://github.com/francoasevey/challenge_IAHUB.git
 cd challenge_IAHUB
 
 # Crear entorno virtual
